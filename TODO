@@ -1,0 +1,24 @@
+
+NOTES PROJECT :
+
+  Use-Cases :
+
+    User Creates A Note :
+
+      User:
+        ✔ Add User Schema @started(24-12-11 13:46) @done(24-12-11 13:52) @lasted(6m35s)
+        ☐ Add  Registration @started(24-12-11 13:53)
+        ☐ Add  Validation
+        ☐ Add  SignIn 
+        ☐ Add  Logout 
+
+      Note:
+        ☐ Add a Notes Schema
+        ☐ Add Note Creation By User 
+        ☐ Add Note Update By Auth User
+        ☐ Add Note Delete By Auth User
+        ☐ Add Note Read By All Users
+        
+
+
+
