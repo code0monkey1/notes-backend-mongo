@@ -47,7 +47,7 @@
     "dependencies": {
         "dotenv": "^16.4.5",
         "express": "^4.21.2",
-        "express-async-errors": "^3.1.1",
+        "express-validator": "^7.0.1",
         "http-errors": "^2.0.0",
         "mongoose": "^8.8.4",
         "winston": "^3.12.0"
