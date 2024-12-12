@@ -2,16 +2,11 @@ import express, { NextFunction, Request, Response } from "express";
 import logger from "./config/logger";
 import { HttpError } from "http-errors";
 const app = express();
-import authRouter from './routes/auth-router'
-import "express-async-errors";
+import authRouter from "./routes/auth-router";
 
 app.use(express.json());
 
-app.get("/data", (req, res) => {
-    res.json({ data: "will  crash again" });
-});
-
-app.use('/auth',authRouter)
+app.use("/auth", authRouter);
 
 app.use(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

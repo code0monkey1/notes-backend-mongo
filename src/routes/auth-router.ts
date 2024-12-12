@@ -1,17 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { AuthController } from "../controllers/auth-controller";
-const authController = new AuthController()
+import registerValidator from "../validators/register-validator";
+const authController = new AuthController();
 
 import { Router } from "express";
 
 const router = Router();
 
+router.post("/register", registerValidator, authController.register);
 
-router.post('/register',authController.register)
-
-
-export default router
-
-
-
-
+export default router;
