@@ -1,61 +1,92 @@
 import supertest from "supertest";
 import app from "../../src/app";
-export const userData = {
-    name: "test",
-    email: "test@gmail.com",
-    password: "testing_right",
-    username: "test",
-};
+import registerHelper from "./helper";
+const api = supertest(app);
+import db from "../../src/utils/db";
 
 const BASE_URL = "/auth/register";
-const api = supertest(app);
-
 describe("POST /auth/register", () => {
-    describe("happy path", () => {
-        it("should have the supplied body in request", async () => {
-            const userDataWithEmail = { ...userData, email: "email@gmail.com" };
+  beforeAll(async () => {
+    await db.connect();
+  });
 
-            const response = await api
-                .post(BASE_URL)
-                .send(userDataWithEmail)
-                .expect(200);
+  beforeEach(async () => {
+    // delete all users created
+    await db.clear();
+  });
+  afterAll(async () => {
+    // disconnect db
+    await db.disconnect();
+  });
 
-            expect(response.body).toEqual(userDataWithEmail);
-        });
+  describe("happy path", () => {
+    it("should have the supplied body in request", async () => {
+      const userData = registerHelper.getUserData();
+
+      const response = await api.post(BASE_URL).send(userData).expect(201);
+
+      expect(response.body.email).toBe(userData.email);
+      expect(response.body.name).toBe(userData.name);
+      expect(response.body.username).toBe(userData.username);
+    });
+  });
+
+  describe("unhappy path", () => {
+    describe("when user already exists", () => {
+      it("should return 409 status code, if email is duplicate", async () => {
+        // arrange
+        await registerHelper.createUser(registerHelper.getUserData());
+
+        const usersBefore = await registerHelper.getAllUsers();
+        const userData = registerHelper.getUserData();
+
+        // act
+        const response = await api.post(BASE_URL).send(userData).expect(409);
+
+        // assert
+        expect(response.body.errors).toHaveLength(1);
+        expect(response.body.errors[0]).toBe("Email already registered");
+
+        const usersAfter = await registerHelper.getAllUsers();
+        expect(usersAfter.length).toBe(usersBefore.length);
+      });
     });
 
-    describe("unhappy path", () => {
-        describe("validation errors", () => {
-            it("shoud return response code 400 when no body is given", async () => {
-                await api.post(BASE_URL).send({}).expect(400);
-            });
-            it("should return 400 status code if password is less than 8 chars exists", async () => {
-                //arrange
+    describe("validation errors", () => {
+      it("shoud return response code 400 when no body is given", async () => {
+        await api.post(BASE_URL).send({}).expect(400);
+      });
+      it("should return 400 status code if password is less than 8 chars exists", async () => {
+        //arrange
 
-                //act // assert
-                const result = await api
-                    .post(BASE_URL)
-                    .send({ ...userData, password: "1234567" })
-                    .expect(400);
+        const userData = registerHelper.getUserData();
 
-                expect(result.body.errors).toHaveLength(1); // Expecting one validation error
-                expect(result.body.errors[0].msg).toBe(
-                    "Password must be at least 8 characters long",
-                );
-            });
+        //act // assert
+        const result = await api
+          .post(BASE_URL)
+          .send({ ...userData, password: "1234567" })
+          .expect(400);
 
-            it("should return 400 status code if email is invalid", async () => {
-                //arrange
-                //act
-                // assert
-                const result = await api
-                    .post(BASE_URL)
-                    .send({ ...userData, email: "invalid_email" })
-                    .expect(400);
+        expect(result.body.errors).toHaveLength(1); // Expecting one validation error
+        expect(result.body.errors[0].msg).toBe(
+          "Password must be at least 8 characters long",
+        );
+      });
 
-                expect(result.body.errors).toHaveLength(1); // Expecting one validation error
-                expect(result.body.errors[0].msg).toBe("Email should be valid");
-            });
-        });
+      it("should return 400 status code if email is invalid", async () => {
+        //arrange
+
+        const userData = registerHelper.getUserData();
+        //act
+        // assert
+        const result = await api
+          .post(BASE_URL)
+          .send({ ...userData, email: "invalid_email" })
+          .expect(400);
+
+        expect(result.body.errors).toHaveLength(1); // Expecting one validation error
+        expect(result.body.errors[0].msg).toBe("Email should be valid");
+      });
     });
+  });
 });

@@ -20,6 +20,7 @@
         "@types/http-errors": "^2.0.4",
         "@types/jest": "^29.5.12",
         "@types/mongoose": "^5.11.96",
+        "@types/mongoose-unique-validator": "^1.0.9",
         "@types/node": "^20.11.26",
         "@types/supertest": "^6.0.2",
         "@types/winston": "^2.4.4",
@@ -49,7 +50,8 @@
         "express": "^4.21.2",
         "express-validator": "^7.0.1",
         "http-errors": "^2.0.0",
-        "mongoose": "^8.8.4",
+        "mongodb-memory-server": "^10.1.2",
+        "mongoose": "^8.0.0",
         "winston": "^3.12.0"
     }
 }

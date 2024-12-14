@@ -7,8 +7,8 @@ NOTES PROJECT :
 
       User:
         ✔ Add User Schema @started(24-12-11 13:46) @done(24-12-11 13:52) @lasted(6m35s)
-        ☐ Add  Registration @started(24-12-11 13:53)
-        ☐ Add  Validation
+        ✔ Add  Registration @started(24-12-11 13:53) @done(24-12-14 23:10) @lasted(3d9h17m11s)
+        ☐ Add  Validation @started(24-12-14 23:10)
         ☐ Add  SignIn 
         ☐ Add  Logout 
 

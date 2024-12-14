@@ -9,20 +9,17 @@ app.use(express.json());
 app.use("/auth", authRouter);
 
 app.use(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (error: HttpError, req: Request, res: Response, _next: NextFunction) => {
-        logger.error(error.message);
-        const statusCode = error.statusCode || 500;
-        res.status(statusCode).json({
-            errors: [
-                {
-                    type: error.message,
-                    path: "",
-                    location: "",
-                },
-            ],
-        });
-    },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  (error: HttpError, req: Request, res: Response, _next: NextFunction) => {
+    logger.error(error);
+    const statusCode = error.statusCode || error.status || 500;
+
+    res.status(statusCode).json({
+      errors: [
+        { name: error.name, type: error.message, path: "", location: "" },
+      ],
+    });
+  },
 );
 
 export default app;
