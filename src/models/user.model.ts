@@ -19,7 +19,7 @@ const UserSchema: Schema = new Schema(
       required: true,
       trim: true,
     },
-    password: {
+    hashedPassword: {
       type: String,
       required: true,
     },

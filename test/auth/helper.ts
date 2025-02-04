@@ -1,7 +1,6 @@
-import { UserType } from "../../src/models/types";
 import User from "../../src/models/user.model";
 
-export const getUserData = (): UserType => {
+export const getUserData = () => {
   return {
     name: "test",
     email: "test@gmail.com",
@@ -16,8 +15,15 @@ export const getAllUsers = async () => {
   return users;
 };
 
-export const createUser = async (userData: UserType) => {
-  const user = await User.create(userData);
+export const createUser = async (userData: any) => {
+  const user = await User.create({
+    name: userData.name,
+    email: userData.email,
+    username: userData.username,
+    hashedPassword: "hashedPassword",
+  });
+
+  return user;
 };
 
 export default {

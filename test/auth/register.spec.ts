@@ -32,6 +32,14 @@ describe("POST /auth/register", () => {
       expect(response.body.name).toBe(userData.name);
       expect(response.body.username).toBe(userData.username);
     });
+
+    it("should have hashedPassword attribute in response", async () => {
+      const userData = registerHelper.getUserData();
+
+      const response = await api.post(BASE_URL).send(userData).expect(201);
+      expect(response.body.hashedPassword).toBeDefined();
+      expect(response.body.hashedPassword).not.toBe(userData.password);
+    });
   });
 
   describe("unhappy path", () => {
@@ -48,7 +56,7 @@ describe("POST /auth/register", () => {
 
         // assert
         expect(response.body.errors).toHaveLength(1);
-        console.log(JSON.stringify(response.body.errors, null, 2));
+
         expect(response.body.errors[0].type).toBe("Email already registered");
 
         const usersAfter = await registerHelper.getAllUsers();
