@@ -1,8 +1,13 @@
-import { RegisterUserType } from "../models/types";
+import { RegisterUserType, UserType } from "../models/types";
 import User from "../models/user.model";
 
 export class UserService {
     constructor() {}
+
+    async findUserByEmail(email: string) {
+        const existingUser = await User.findOne({ email });
+        return existingUser;
+    }
 
     async updateUser(userId: string, user: RegisterUserType) {
         const updatedUser = await User.findByIdAndUpdate(userId, user, {
@@ -12,7 +17,7 @@ export class UserService {
         return updatedUser;
     }
 
-    async registerUser(user: RegisterUserType) {
+    async registerUser(user: UserType) {
         const newUser = await User.create(user);
         await newUser.save();
         return newUser;

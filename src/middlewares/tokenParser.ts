@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { Request, Response, NextFunction } from "express";
 import { TokenService } from "../services/TokenService";
 
@@ -9,7 +10,6 @@ export interface CustomRequest extends Request {
     };
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 const tokenParser = async (
     req: CustomRequest,
     res: Response,

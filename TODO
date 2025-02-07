@@ -20,7 +20,7 @@ TODOS:
       2. User:
 
           a. User Updates Profile :
-            - Validate User Input @started(25-02-07 19:20)
+            ✔ Validate User Input @started(25-02-07 19:20) @done(25-02-07 21:35) @lasted(2h15m17s)
             ✔ Check if User exists @done(25-02-07 20:08)
             ✔ Update User in DB @done(25-02-07 20:08)
           

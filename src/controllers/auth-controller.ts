@@ -1,14 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { LoginUserType, RegisterUserType, UserType } from "../models/types";
-import User from "../models/user.model";
 import createHttpError from "http-errors";
 import EncryptionService from "../services/EncryptionService";
 import { validationErrorParser } from "../utils/helper";
 import { TokenService } from "../services/TokenService";
+import { UserService } from "../services/UserService";
 
 export class AuthController {
-    constructor(private readonly encryptionService: EncryptionService) {}
+    constructor(
+        private readonly encryptionService: EncryptionService,
+        private readonly userService: UserService,
+    ) {}
 
     register = async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -21,7 +24,9 @@ export class AuthController {
             const body = (await req.body) as RegisterUserType;
 
             // check if email aready exists
-            const existingUser = await User.findOne({ email: body.email });
+            const existingUser = await this.userService.findUserByEmail(
+                body.email,
+            );
 
             if (existingUser) {
                 throw createHttpError(409, "Email already registered");
@@ -32,7 +37,7 @@ export class AuthController {
                 body.password,
             );
 
-            const user = await User.create({
+            const user = await this.userService.registerUser({
                 name: body.name,
                 email: body.email,
                 username: body.username,
@@ -62,7 +67,7 @@ export class AuthController {
 
             const { email, password } = (await req.body) as LoginUserType;
 
-            const existingUser = await User.findOne({ email });
+            const existingUser = await this.userService.findUserByEmail(email);
 
             if (!existingUser) {
                 throw createHttpError(404, "User not found");
