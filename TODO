@@ -2,7 +2,8 @@
 TODOS:
 
   Use-Cases :
-      1. Auth :
+      ✔ 1. Auth : @done(25-02-07 17:04)
+
         ✔ a. User Registers : @done(25-02-07 13:53)
           ✔ Validate User Input @done(25-02-07 13:50)
           ✔ Hash password using bcrypt @done(25-02-07 13:50)
@@ -18,15 +19,12 @@ TODOS:
       
       2. User:
 
-          a. User Logs Out :
-            - Delete JWT from client
-
-          b. User Updates Profile :
-            - Validate User Input
-            - Check if User exists
-            - Update User in DB
+          a. User Updates Profile :
+            - Validate User Input @started(25-02-07 19:20)
+            ✔ Check if User exists @done(25-02-07 20:08)
+            ✔ Update User in DB @done(25-02-07 20:08)
           
-          c. User Deletes Profile :
+          b. User Deletes Profile :
             - Check if User exists
             - Delete User from DB
 

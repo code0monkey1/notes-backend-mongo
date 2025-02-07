@@ -4,10 +4,12 @@ import { HttpError } from "http-errors";
 const app = express();
 import authRouter from "./routes/auth-router";
 import mongoose from "mongoose";
+import userRouter from "./routes/user-router";
 
 app.use(express.json());
 
 app.use("/auth", authRouter);
+app.use("/user", userRouter);
 
 app.use(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
