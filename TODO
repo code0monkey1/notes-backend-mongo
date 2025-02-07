@@ -13,15 +13,14 @@ TODOS:
           ✔ Validate User Input @done(25-02-07 13:51) @today
           ✔ Check if User exists @done(25-02-07 13:51)
           ✔ Check if password is correct @high @done(25-02-07 14:24)
-          [] Generate JWT @low @started(25-02-07 14:24)
-          [] Send JWT to client 
+          ✔ Generate JWT @low @started(25-02-07 14:24) @done(25-02-07 16:47) @lasted(2h23m22s)
+          ✔ Send JWT to client @done(25-02-07 16:47)
       
       2. User:
 
           a. User Logs Out :
             - Delete JWT from client
 
-          
           b. User Updates Profile :
             - Validate User Input
             - Check if User exists
@@ -34,28 +33,28 @@ TODOS:
       3. Notes :
 
         a. User Creates A Note :
-          - Authenticate User
+          - Authenticate User using JWT
           - Validate User Input
           - Save Note to DB
 
         b. User Updates A Note :
-          - Authenticate User
+          - Authenticate User using JWT
           - Validate User Input
           - Check if Note exists
           - Update Note in DB
 
         c. User Deletes A Note :
-          - Authenticate User
+          - Authenticate User using JWT
           - Check if Note exists
           - Delete Note from DB
 
         d. User Views A Note :
-          - Authenticate User
+          - Authenticate User using JWT
           - Check if Note exists
           - Return Note to User
 
         e. User Views All Notes :
-          - Return All Notes to User
+          - Return All Notes to User 
 
       
 

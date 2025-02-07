@@ -46,6 +46,18 @@ describe("POST /auth/register", () => {
             expect(response.body.hashedPassword).toBeDefined();
             expect(response.body.hashedPassword).not.toBe(userData.password);
         });
+
+        it("shold return a JWT Bearer header token", async () => {
+            const userData = helper.getUserData();
+
+            const response = await api
+                .post(BASE_URL)
+                .send(userData)
+                .expect(201);
+
+            expect(response.headers.authorization).toBeDefined();
+            expect(response.headers.authorization).toContain("Bearer");
+        });
     });
 
     describe("unhappy path", () => {

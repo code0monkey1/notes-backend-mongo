@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-
 import { validationResult } from "express-validator";
 import { LoginUserType, RegisterUserType, UserType } from "../models/types";
 import User from "../models/user.model";
 import createHttpError from "http-errors";
 import EncryptionService from "../services/EncryptionService";
 import { validationErrorParser } from "../utils/helper";
+import { TokenService } from "../services/TokenService";
 
 export class AuthController {
     constructor(private readonly encryptionService: EncryptionService) {}
@@ -39,7 +39,12 @@ export class AuthController {
                 hashedPassword,
             });
 
-            // create user jwt token
+            const token = TokenService.generateToken({
+                id: user.id as string,
+                email: user.email,
+            });
+
+            res.setHeader("Authorization", `Bearer ${token}`);
 
             res.status(201).json(user);
         } catch (e) {
