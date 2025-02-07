@@ -12,7 +12,6 @@ export const getUserData = () => {
 
 export const getAllUsers = async () => {
     const users = await User.find({});
-
     return users;
 };
 
@@ -23,6 +22,14 @@ export const createUser = async (userData: any) => {
         username: userData.username,
         hashedPassword: await bcrypt.hash(userData.password, 10),
     });
+
+    return user;
+};
+
+export const getDeletedUser = async (userData: any) => {
+    const user = await createUser(userData);
+
+    await User.deleteOne({ _id: user.id });
 
     return user;
 };
@@ -42,4 +49,5 @@ export default {
     getAllUsers,
     createUser,
     assertErrorMessageExists,
+    getDeletedUser,
 };

@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import express from "express";
+import { Router } from "express";
 import tokenParser from "../middlewares/tokenParser";
 import { UserController } from "../controllers/user-controller";
+import { UserService } from "../services/UserService";
+const userService = new UserService();
 
-const userController = new UserController();
+const userController = new UserController(userService);
 
-const router = express.Router();
+const router = Router();
 
-// eslint-disable-next-line @typescript-eslint/unbound-method
 router.patch("/me", tokenParser, userController.updateUser);
+router.delete("/me", tokenParser, userController.deleteUser);
 
 export default router;

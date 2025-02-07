@@ -1,11 +1,11 @@
 import request from "supertest";
 import app from "../../src/app"; // Adjust the path to your app
-import helper from "../auth/helper";
+import helper, { assertErrorMessageExists } from "../auth/helper";
 import { TokenService } from "../../src/services/TokenService";
 import db from "../../src/utils/db";
 
 const BASE_URL = "/user/me";
-describe("PATCH /user/me", () => {
+describe("DELETE /user/me", () => {
     beforeAll(async () => {
         await db.connect();
     });
@@ -20,7 +20,9 @@ describe("PATCH /user/me", () => {
         await db.disconnect();
     });
 
-    it("should update user details", async () => {
+    it("should delete user ", async () => {
+        //arrange
+
         // First create a user
         const user = await helper.createUser(helper.getUserData());
 
@@ -28,26 +30,32 @@ describe("PATCH /user/me", () => {
             id: user.id,
             email: user.email,
         });
+        //act
+
+        expect((await helper.getAllUsers()).length).toBe(1);
 
         const response = await request(app)
-            .patch(BASE_URL)
+            .delete(BASE_URL)
             .set("Authorization", `Bearer ${jwt}`)
-            .send({
-                name: "New Name",
-                email: "newemail@example.com",
-            })
             .expect(200);
 
-        expect(response.body).toHaveProperty("name", "New Name");
-        expect(response.body).toHaveProperty("email", "newemail@example.com");
+        //assert
+        expect((await helper.getAllUsers()).length).toBe(0);
     });
 
-    it("should return 401 if user does not exist", async () => {
-        const response = await request(app).patch(BASE_URL).send({
-            name: "New Name",
-            email: "newemail@example.com",
+    it("should return 404 if user to delete not found", async () => {
+        // First create a user
+        const deletedUser = await helper.getDeletedUser(helper.getUserData());
+
+        const jwt = TokenService.generateToken({
+            id: deletedUser.id,
+            email: deletedUser.email,
         });
 
-        expect(response.status).toBe(401);
+        //act
+        await request(app)
+            .delete(BASE_URL)
+            .set("Authorization", `Bearer ${jwt}`)
+            .expect(404);
     });
 });

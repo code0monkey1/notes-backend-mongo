@@ -8,6 +8,7 @@ import registerValidator from "../validators/register-validator";
 
 const encryptionService = new EncryptionService();
 const userService = new UserService();
+
 const authController = new AuthController(encryptionService, userService);
 
 import { Router } from "express";

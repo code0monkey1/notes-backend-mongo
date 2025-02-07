@@ -25,8 +25,8 @@ TODOS:
             ✔ Update User in DB @done(25-02-07 20:08)
           
           b. User Deletes Profile :
-            - Check if User exists
-            - Delete User from DB
+            ✔ Check if User exists @started(25-02-07 23:19) @done(25-02-07 23:43) @lasted(24m22s)
+            ✔ Delete User from DB @done(25-02-07 23:43)
 
       3. Notes :
 

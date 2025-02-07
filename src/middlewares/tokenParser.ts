@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { Request, Response, NextFunction } from "express";
 import { TokenService } from "../services/TokenService";
+import createHttpError from "http-errors";
 
 // Extend the Request interface to include id and email
 export interface CustomRequest extends Request {
@@ -19,7 +20,7 @@ const tokenParser = async (
         const token = req.headers.authorization?.split(" ")[1];
 
         if (!token) {
-            return res.status(401).json({ message: "No token provided" });
+            throw createHttpError(401, "No token provided");
         }
 
         const decoded = TokenService.verifyToken(token) as {
@@ -28,7 +29,7 @@ const tokenParser = async (
         };
 
         if (!decoded) {
-            return res.status(401).json({ message: "Invalid token" });
+            throw createHttpError(401, "Invalid token");
         }
 
         // Attach the user id and email to the request object
