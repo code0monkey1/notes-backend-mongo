@@ -1,4 +1,5 @@
 import User from "../../src/models/user.model";
+import bcrypt from "bcrypt";
 
 export const getUserData = () => {
     return {
@@ -20,7 +21,7 @@ export const createUser = async (userData: any) => {
         name: userData.name,
         email: userData.email,
         username: userData.username,
-        hashedPassword: "hashedPassword",
+        hashedPassword: await bcrypt.hash(userData.password, 10),
     });
 
     return user;

@@ -8,3 +8,8 @@ export type UserType = {
 export type RegisterUserType = Omit<UserType, "hashedPassword"> & {
     password: string;
 };
+
+export type LoginUserType = {
+    email: string;
+    password: string;
+};

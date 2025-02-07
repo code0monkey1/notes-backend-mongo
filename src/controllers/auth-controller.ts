@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { validationResult } from "express-validator";
-import { RegisterUserType, UserType } from "../models/types";
+import { LoginUserType, RegisterUserType, UserType } from "../models/types";
 import User from "../models/user.model";
 import createHttpError from "http-errors";
 import EncryptionService from "../services/EncryptionService";
@@ -32,13 +32,14 @@ export class AuthController {
                 body.password,
             );
 
-            // create new user if all ok
             const user = await User.create({
                 name: body.name,
                 email: body.email,
                 username: body.username,
                 hashedPassword,
             });
+
+            // create user jwt token
 
             res.status(201).json(user);
         } catch (e) {
@@ -54,16 +55,25 @@ export class AuthController {
                 return res.status(400).json(validationErrorParser(result));
             }
 
-            const { email } = (await req.body) as Partial<UserType>;
+            const { email, password } = (await req.body) as LoginUserType;
 
-            // check if user exists
             const existingUser = await User.findOne({ email });
 
             if (!existingUser) {
                 throw createHttpError(404, "User not found");
             }
 
-            const body = (await req.body) as UserType;
+            const isPasswordCorrect =
+                await this.encryptionService.verifyPassword(
+                    password,
+                    existingUser.hashedPassword,
+                );
+
+            if (!isPasswordCorrect) {
+                throw createHttpError(401, "Password is incorrect");
+            }
+
+            const body = req.body as UserType;
 
             res.json(body);
         } catch (e) {

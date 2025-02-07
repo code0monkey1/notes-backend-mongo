@@ -1,31 +1,66 @@
 
-NOTES PROJECT :
+TODOS:
 
   Use-Cases :
+      1. Auth :
+        ✔ a. User Registers : @done(25-02-07 13:53)
+          ✔ Validate User Input @done(25-02-07 13:50)
+          ✔ Hash password using bcrypt @done(25-02-07 13:50)
+          ✔ Save User to DB @done(25-02-07 13:50)
+          
 
-    User Creates A Note :
-      Misc:
-        ☐ Add Pull Request Actions
-    
-      User:
-        ✔ Add User Schema @started(24-12-11 13:46) @done(24-12-11 13:52) @lasted(6m35s)
-        ✔ Add  Registration @started(24-12-11 13:53) @done(24-12-14 23:10) @lasted(3d9h17m11s)
-        ✔ Add  Validation @started(24-12-14 23:10) @done(24-12-17 01:21) @lasted(2d2h11m48s)
-        ☐ Add  SignIn @started(25-02-04 13:17)
-        ☐ Add  Logout 
-        ☐ Add  ForgetPassword 
-        ☐ Add  ResetPassword 
-        ☐ Add  UpdateProfile
-  
+        b. User Logs In :
+          ✔ Validate User Input @done(25-02-07 13:51) @today
+          ✔ Check if User exists @done(25-02-07 13:51)
+          ✔ Check if password is correct @high @done(25-02-07 14:24)
+          [] Generate JWT @low @started(25-02-07 14:24)
+          [] Send JWT to client 
+      
+      2. User:
 
-      Note:
-        ☐ Add a Notes Schema
-        ☐ Add Note Creation By User 
-        ☐ Add Note Update By Auth User
-        ☐ Add Note Delete By Auth User
-        ☐ Add Note Read By All Users
-        ☐ Add Note Read By Auth User
+          a. User Logs Out :
+            - Delete JWT from client
 
+          
+          b. User Updates Profile :
+            - Validate User Input
+            - Check if User exists
+            - Update User in DB
+          
+          c. User Deletes Profile :
+            - Check if User exists
+            - Delete User from DB
+
+      3. Notes :
+
+        a. User Creates A Note :
+          - Authenticate User
+          - Validate User Input
+          - Save Note to DB
+
+        b. User Updates A Note :
+          - Authenticate User
+          - Validate User Input
+          - Check if Note exists
+          - Update Note in DB
+
+        c. User Deletes A Note :
+          - Authenticate User
+          - Check if Note exists
+          - Delete Note from DB
+
+        d. User Views A Note :
+          - Authenticate User
+          - Check if Note exists
+          - Return Note to User
+
+        e. User Views All Notes :
+          - Return All Notes to User
+
+      
+
+
+     
         
 
 

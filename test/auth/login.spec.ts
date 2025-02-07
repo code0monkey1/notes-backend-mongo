@@ -2,6 +2,7 @@ import supertest from "supertest";
 import app from "../../src/app";
 import db from "../../src/utils/db";
 import helper from "./helper";
+import { assertErrorMessageExists } from "./helper";
 
 const api = supertest(app);
 
@@ -33,7 +34,6 @@ describe("POST /auth/login", () => {
             };
 
             // act
-            // create user first
             await helper.createUser(userData);
 
             const response = await api
@@ -61,11 +61,36 @@ describe("POST /auth/login", () => {
                     .expect(404);
 
                 // assert
-                expect(
-                    response.body.errors.map(
-                        (e: { message: any }) => e.message,
-                    ),
-                ).toContainEqual("User not found");
+                assertErrorMessageExists(response, "User not found");
+            });
+        });
+
+        describe("password is incorrect", () => {
+            it("should return 401 status code, if password is incorrect", async () => {
+                // arrange
+                const userData = {
+                    email: "test@gmail.com",
+                    password: "testing_password",
+                };
+
+                // create user first
+                await helper.createUser({
+                    name: "test",
+                    username: "test",
+                    ...userData,
+                });
+
+                // act
+                const response = await api
+                    .post(BASE_URL)
+                    .send({
+                        ...userData,
+                        password: "incorrect_password",
+                    })
+                    .expect(401);
+
+                // assert
+                assertErrorMessageExists(response, "Password is incorrect");
             });
         });
 
@@ -84,7 +109,7 @@ describe("POST /auth/login", () => {
 
                 // assert
 
-                helper.assertErrorMessageExists(response, "email is missing");
+                assertErrorMessageExists(response, "email is missing");
             });
 
             it("should return 400 status code, if password is not supplied", async () => {
@@ -100,11 +125,7 @@ describe("POST /auth/login", () => {
                     .expect(400);
 
                 // assert
-                expect(
-                    response.body.errors.map(
-                        (e: { message: any }) => e.message,
-                    ),
-                ).toContainEqual("password is missing");
+                assertErrorMessageExists(response, "password is missing");
             });
         });
     });
