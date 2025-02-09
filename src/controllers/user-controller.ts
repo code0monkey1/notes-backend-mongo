@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { CustomRequest } from "../middlewares/tokenParser";
 import { RegisterUserType } from "../models/types";
-import { UserService } from "../services/UserService";
+import UserService from "../services/UserService";
 
 export class UserController {
     constructor(private readonly userService: UserService) {}

@@ -5,10 +5,13 @@ import noteValidator from "../validators/note-validator";
 import noteParser from "../middlewares/noteParser";
 import { NotesController } from "../controllers/notes-controller";
 import NoteService from "../services/NoteService";
+import UserService from "../services/UserService";
 
 const router = Router();
 const noteService = new NoteService();
-const notesController = new NotesController(noteService);
+const userSerivce = new UserService();
+
+const notesController = new NotesController(noteService, userSerivce);
 
 router.use(tokenParser);
 

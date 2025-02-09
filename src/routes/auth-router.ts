@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { AuthController } from "../controllers/auth-controller";
 import EncryptionService from "../services/EncryptionService";
-import { UserService } from "../services/UserService";
+import UserService from "../services/UserService";
 
 import loginValidator from "../validators/login-validator";
 import registerValidator from "../validators/register-validator";

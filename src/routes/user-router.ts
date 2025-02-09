@@ -2,7 +2,7 @@
 import { Router } from "express";
 import tokenParser from "../middlewares/tokenParser";
 import { UserController } from "../controllers/user-controller";
-import { UserService } from "../services/UserService";
+import UserService from "../services/UserService";
 const userService = new UserService();
 
 const userController = new UserController(userService);

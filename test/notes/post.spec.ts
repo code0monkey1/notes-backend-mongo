@@ -75,7 +75,7 @@ describe("POST /notes", () => {
                 .send({ title: "Test Note", content: "This is a test note" })
                 .expect(404);
 
-            await assertErrorMessageExists(res, "User not found");
+            await assertErrorMessageExists(res, "user not found");
         });
 
         it("should return 400 status code when user is invalid", async () => {

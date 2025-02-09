@@ -2,14 +2,16 @@ import { NextFunction, Request, Response } from "express";
 import { CustomRequest } from "../middlewares/tokenParser";
 import { validationResult } from "express-validator";
 import createHttpError from "http-errors";
-import User from "../models/user.model";
 import { validationErrorParser } from "../utils/helper";
-import mongoose from "mongoose";
 import NoteService from "../services/NoteService";
 import { NoteType } from "../models/types";
+import UserService from "../services/UserService";
 
 export class NotesController {
-    constructor(private readonly noteService: NoteService) {}
+    constructor(
+        private readonly noteService: NoteService,
+        private readonly userService: UserService,
+    ) {}
 
     getAllNotes = async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -50,19 +52,13 @@ export class NotesController {
                 );
             }
 
-            const userId = req.user.id;
-
-            const savedUser = await User.findById(userId);
-
-            if (!savedUser) {
-                throw createHttpError(404, "User not found");
-            }
+            const savedUser = await this.userService.getUserById(req.user.id);
 
             const body = req.body as Partial<NoteType>;
 
             const noteBody = {
                 content: body.content as string,
-                user: new mongoose.Types.ObjectId(userId),
+                user: savedUser._id,
                 important: body.important || false,
             };
 

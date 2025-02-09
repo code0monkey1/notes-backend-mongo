@@ -2,7 +2,7 @@ import createHttpError from "http-errors";
 import { RegisterUserType, UserType } from "../models/types";
 import User from "../models/user.model";
 
-export class UserService {
+export default class UserService {
     async findUserByEmail(email: string) {
         const existingUser = await User.findOne({ email });
         return existingUser;
@@ -38,6 +38,10 @@ export class UserService {
 
     async getUserById(userId: string) {
         const user = await User.findById(userId);
+
+        if (!user) {
+            throw createHttpError(404, "user not found");
+        }
 
         return user;
     }

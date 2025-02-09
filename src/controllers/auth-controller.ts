@@ -5,7 +5,7 @@ import createHttpError from "http-errors";
 import EncryptionService from "../services/EncryptionService";
 import { validationErrorParser } from "../utils/helper";
 import { TokenService } from "../services/TokenService";
-import { UserService } from "../services/UserService";
+import UserService from "../services/UserService";
 
 export class AuthController {
     constructor(
