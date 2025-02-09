@@ -5,11 +5,13 @@ const app = express();
 import authRouter from "./routes/auth-router";
 import mongoose from "mongoose";
 import userRouter from "./routes/user-router";
+import notesRouter from "./routes/notes-router";
 
 app.use(express.json());
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/notes", notesRouter);
 
 app.use(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

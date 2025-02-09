@@ -4,7 +4,7 @@ import { LoginUserType, RegisterUserType, UserType } from "../models/types";
 import createHttpError from "http-errors";
 import EncryptionService from "../services/EncryptionService";
 import { validationErrorParser } from "../utils/helper";
-import { TokenService } from "../services/TokenService";
+import { TokenService } from "../routes/TokenService";
 import { UserService } from "../services/UserService";
 
 export class AuthController {

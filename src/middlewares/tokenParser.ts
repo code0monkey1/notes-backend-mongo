@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { Request, Response, NextFunction } from "express";
-import { TokenService } from "../services/TokenService";
+import { TokenService } from "../routes/TokenService";
 import createHttpError from "http-errors";
 
 // Extend the Request interface to include id and email
