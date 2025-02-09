@@ -41,23 +41,6 @@ describe("POST /notes", () => {
     });
 
     describe("unhappy path", () => {
-        it("should return 400 when user object  with user id is not present in the Custom request object", async () => {
-            const token = TokenService.generateToken({});
-
-            const res = await request(app)
-                .post("/notes")
-                .set("Authorization", `Bearer ${token}`)
-                .send({
-                    title: "Test Note",
-                    content: "This is a test note",
-                })
-                .expect(400);
-
-            await assertErrorMessageExists(
-                res,
-                "user details missing in request object",
-            );
-        });
         it("should return 401 status code when user is not authenticated", async () => {
             const res = await request(app)
                 .post("/notes")

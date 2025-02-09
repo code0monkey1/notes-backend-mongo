@@ -32,10 +32,6 @@ router.post(
 
             const userId = req.user.id;
 
-            if (!mongoose.Types.ObjectId.isValid(userId)) {
-                throw createHttpError(400, "Invalid user id");
-            }
-
             const savedUser = await User.findById(userId);
 
             if (!savedUser) {
@@ -55,6 +51,44 @@ router.post(
             res.status(201).json(newNote);
         } catch (err) {
             next(err);
+        }
+    },
+);
+
+router.patch(
+    "/:id",
+    tokenParser,
+    async (req: CustomRequest, res: Response, next: NextFunction) => {
+        try {
+            const body = req.body as Partial<NoteType>;
+
+            const noteId = req.params.id;
+
+            if (!mongoose.Types.ObjectId.isValid(noteId)) {
+                throw createHttpError(400, "Notes id is invalid mongooseId");
+            }
+
+            const note = await Note.findById(noteId);
+
+            if (!note) {
+                throw createHttpError(404, "note not found");
+            }
+
+            if (note.user.toString() != req.user?.id) {
+                throw createHttpError(401, "unauthorized user");
+            }
+
+            const updatedNote = await Note.findByIdAndUpdate(noteId, body, {
+                new: true,
+            });
+
+            if (!updatedNote) {
+                return res.status(404).json({ message: "Note not found" });
+            }
+
+            res.json(updatedNote);
+        } catch (error) {
+            next(error);
         }
     },
 );

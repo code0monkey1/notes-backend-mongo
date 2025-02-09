@@ -2,12 +2,12 @@
 import { Request, Response, NextFunction } from "express";
 import { TokenService } from "../routes/TokenService";
 import createHttpError from "http-errors";
+import mongoose from "mongoose";
 
 // Extend the Request interface to include id and email
 export interface CustomRequest extends Request {
     user?: {
         id: string;
-        email: string;
     };
 }
 
@@ -32,10 +32,13 @@ const tokenParser = async (
             throw createHttpError(401, "Invalid token");
         }
 
-        // Attach the user id and email to the request object
+        if (!mongoose.Types.ObjectId.isValid(decoded.id)) {
+            throw createHttpError(400, "Invalid user id");
+        }
+
+        // Attach the user id  to the request object
         req.user = {
             id: decoded.id,
-            email: decoded.email,
         };
 
         next();

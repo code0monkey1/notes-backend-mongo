@@ -7,7 +7,6 @@ export default checkSchema({
         trim: true,
     },
     important: {
-        errorMessage: "name is missing",
         default: false,
     },
 });
