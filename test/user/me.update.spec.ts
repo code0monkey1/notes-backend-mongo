@@ -1,8 +1,8 @@
 import request from "supertest";
 import app from "../../src/app"; // Adjust the path to your app
 import helper, { assertErrorMessageExists } from "../auth/helper";
-import { TokenService } from "../../src/routes/TokenService";
 import db from "../../src/utils/db";
+import { TokenService } from "../../src/services/TokenService";
 
 const BASE_URL = "/user/me";
 describe("PATCH /user/me", () => {
@@ -19,7 +19,6 @@ describe("PATCH /user/me", () => {
         // disconnect db
         await db.disconnect();
     });
-
     it("should update user details", async () => {
         // First create a user
         const user = await helper.createUser(helper.getUserData());

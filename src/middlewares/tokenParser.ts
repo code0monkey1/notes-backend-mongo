@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { Request, Response, NextFunction } from "express";
-import { TokenService } from "../routes/TokenService";
+import { TokenService } from "../services/TokenService";
 import createHttpError from "http-errors";
 import mongoose from "mongoose";
 

@@ -2,7 +2,7 @@ import request from "supertest";
 import app from "../../src/app"; // Adjust the path to your app
 import db from "../../src/utils/db";
 import helper, { assertErrorMessageExists } from "../auth/helper";
-import { TokenService } from "../../src/routes/TokenService";
+import { TokenService } from "../../src/services/TokenService";
 
 describe("POST /notes", () => {
     beforeAll(async () => {

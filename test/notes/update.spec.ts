@@ -2,10 +2,11 @@ import request from "supertest";
 import app from "../../src/app"; // Adjust the path to your app
 import db from "../../src/utils/db";
 import helper, { assertErrorMessageExists } from "../auth/helper";
-import { TokenService } from "../../src/routes/TokenService";
-import Note from "../../src/models/note.model";
 
-describe("DELETE /notes", () => {
+import Note from "../../src/models/note.model";
+import { TokenService } from "../../src/services/TokenService";
+
+describe("PATCH /notes", () => {
     beforeAll(async () => {
         await db.connect();
     });
@@ -19,7 +20,7 @@ describe("DELETE /notes", () => {
     });
 
     describe("happy path", () => {
-        it("should return 200 and delete the note ", async () => {
+        it("should return 200 with the updated note object", async () => {
             const user = await helper.createUser(helper.getUserData());
 
             const token = TokenService.generateToken({
@@ -33,27 +34,27 @@ describe("DELETE /notes", () => {
                 important: true,
             });
 
-            const notesBefore = await Note.find({});
-
-            await request(app)
-                .delete(`/notes/${note._id}`)
+            const res = await request(app)
+                .patch(`/notes/${note._id}`)
                 .set("Authorization", "Bearer " + token)
                 .send({ content: "Updated note content" });
 
-            const notesAfter = await Note.find({});
-
-            expect(notesBefore.length).toBeGreaterThan(notesAfter.length);
-            expect(notesAfter).not.toContainEqual(notesBefore[0]);
+            expect(res.body.content).toBe("Updated note content");
+            expect(res.body.important).toBe(true);
+            expect(res.body.user).toBe(user._id.toString());
         });
     });
 
     describe("unhappy path", () => {
         it("should return 401 status code when bearer token not provided", async () => {
-            const res = await request(app).delete("/notes/123").expect(401);
+            const res = await request(app)
+                .patch("/notes/123")
+                .send({ content: "Updated note content" })
+                .expect(401);
             await assertErrorMessageExists(res, "No token provided");
         });
 
-        it("should return 404 if note to be deleted is not found", async () => {
+        it("should return 404 if note to be updated is not found", async () => {
             const user = await helper.createUser(helper.getUserData());
 
             const token = TokenService.generateToken({
@@ -62,7 +63,7 @@ describe("DELETE /notes", () => {
             });
 
             const res = await request(app)
-                .delete("/notes/60a8e9b6b8d5f20015b4d7c6")
+                .patch("/notes/60a8e9b6b8d5f20015b4d7c6")
                 .set("Authorization", "Bearer " + token)
                 .send({ content: "Updated note content" })
                 .expect(404);
@@ -79,7 +80,7 @@ describe("DELETE /notes", () => {
             });
 
             const res = await request(app)
-                .delete("/notes/invalid_id")
+                .patch("/notes/invalid_id")
                 .set("Authorization", "Bearer " + token)
                 .send({ content: "Updated note content", note: "invalid_id" })
                 .expect(400);
@@ -90,15 +91,10 @@ describe("DELETE /notes", () => {
             );
         });
 
-        it("should return 401 status code when unauthorized user tried to delete notes", async () => {
+        it("should return 401 status code when unauthorized usser tried to update notes", async () => {
             const user = await helper.createUser(helper.getUserData());
 
-            const otherUser = await helper.getDeletedUser({
-                name: "otherName",
-                username: "otherUser",
-                email: "otherUser@example.com",
-                password: "password",
-            });
+            const otherUser = await helper.getDeletedUser(helper.getUserData());
 
             const token = TokenService.generateToken({
                 id: user._id,
@@ -112,7 +108,7 @@ describe("DELETE /notes", () => {
             });
 
             const res = await request(app)
-                .delete(`/notes/${note._id}`)
+                .patch(`/notes/${note._id}`)
                 .set("Authorization", "Bearer " + token)
                 .send({ content: "Updated note content" })
                 .expect(401);

@@ -19,6 +19,6 @@ router.post("/", noteValidator, notesController.createNote);
 
 router.patch("/:id", noteParser, notesController.updateNoteById);
 
-router.delete("/:id", notesController.deleteNoteById);
+router.delete("/:id", noteParser, notesController.deleteNoteById);
 
 export default router;
