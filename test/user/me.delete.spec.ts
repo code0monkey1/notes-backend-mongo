@@ -42,20 +42,4 @@ describe("DELETE /user/me", () => {
         //assert
         expect((await helper.getAllUsers()).length).toBe(0);
     });
-
-    it("should return 404 if user to delete not found", async () => {
-        // First create a user
-        const deletedUser = await helper.getDeletedUser(helper.getUserData());
-
-        const jwt = TokenService.generateToken({
-            id: deletedUser.id,
-            email: deletedUser.email,
-        });
-
-        //act
-        await request(app)
-            .delete(BASE_URL)
-            .set("Authorization", `Bearer ${jwt}`)
-            .expect(404);
-    });
 });

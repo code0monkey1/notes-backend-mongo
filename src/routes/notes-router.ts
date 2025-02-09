@@ -2,12 +2,13 @@
 import { Router } from "express";
 import tokenParser from "../middlewares/tokenParser";
 import noteValidator from "../validators/note-validator";
-
 import noteParser from "../middlewares/noteParser";
 import { NotesController } from "../controllers/notes-controller";
+import NoteService from "../services/NoteService";
 
 const router = Router();
-const notesController = new NotesController();
+const noteService = new NoteService();
+const notesController = new NotesController(noteService);
 
 router.use(tokenParser);
 

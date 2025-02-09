@@ -1,3 +1,4 @@
+import createHttpError from "http-errors";
 import { RegisterUserType, UserType } from "../models/types";
 import User from "../models/user.model";
 
@@ -15,6 +16,10 @@ export class UserService {
         const updatedUser = await User.findByIdAndUpdate(userId, user, {
             new: true,
         });
+
+        if (!updatedUser) {
+            throw createHttpError(404, "User not found");
+        }
 
         return updatedUser;
     }

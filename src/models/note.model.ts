@@ -1,12 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-
-export interface NoteType extends mongoose.Document {
-    content: string;
-    user: mongoose.Types.ObjectId;
-    important: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-}
+import { NoteType } from "./types";
 
 const NoteSchema: Schema = new Schema(
     {

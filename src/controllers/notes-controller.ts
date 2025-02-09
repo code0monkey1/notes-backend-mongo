@@ -1,18 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import Note, { NoteType } from "../models/note.model";
 import { CustomRequest } from "../middlewares/tokenParser";
 import { validationResult } from "express-validator";
 import createHttpError from "http-errors";
 import User from "../models/user.model";
 import { validationErrorParser } from "../utils/helper";
 import mongoose from "mongoose";
+import NoteService from "../services/NoteService";
+import { NoteType } from "../models/types";
 
 export class NotesController {
-    constructor() {}
+    constructor(private readonly noteService: NoteService) {}
 
     getAllNotes = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const notes = await Note.find({});
+            const notes = await this.noteService.getAllNotes();
 
             res.json(notes);
         } catch (e) {
@@ -61,17 +62,18 @@ export class NotesController {
 
             const noteBody = {
                 content: body.content as string,
-                user: userId,
-                important: body.important,
+                user: new mongoose.Types.ObjectId(userId),
+                important: body.important || false,
             };
 
-            const newNote = await Note.create(noteBody);
+            const newNote = await this.noteService.createNote(noteBody);
 
             res.status(201).json(newNote);
         } catch (err) {
             next(err);
         }
     };
+
     updateNoteById = async (
         req: CustomRequest,
         res: Response,
@@ -91,17 +93,10 @@ export class NotesController {
                 throw createHttpError(401, "unauthorized user");
             }
 
-            const updatedNote = await Note.findByIdAndUpdate(
+            const updatedNote = await this.noteService.updateNote(
                 req.params.id,
                 modifiedNote,
-                {
-                    new: true,
-                },
             );
-
-            if (!updatedNote) {
-                return res.status(404).json({ message: "Note not found" });
-            }
 
             res.json(updatedNote);
         } catch (error) {
@@ -115,23 +110,18 @@ export class NotesController {
         next: NextFunction,
     ) => {
         try {
-            const noteId = req.params.id;
-
-            if (!mongoose.Types.ObjectId.isValid(noteId)) {
-                throw createHttpError(400, "Notes id is invalid mongooseId");
+            if (!(req.note && req.note.user)) {
+                throw createHttpError(
+                    400,
+                    "note object not attached to custom request object",
+                );
             }
 
-            const note = await Note.findById(noteId);
-
-            if (!note) {
-                throw createHttpError(404, "note not found");
-            }
-
-            if (note.user.toString() !== req.user?.id) {
+            if (req.note.user.toString() !== req.user?.id) {
                 throw createHttpError(401, "unauthorized user");
             }
 
-            await Note.findByIdAndDelete(noteId);
+            await this.noteService.deleteNote(req.params.id);
 
             res.json();
         } catch (err) {

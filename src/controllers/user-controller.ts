@@ -2,7 +2,6 @@ import { NextFunction, Response } from "express";
 import { CustomRequest } from "../middlewares/tokenParser";
 import { RegisterUserType } from "../models/types";
 import { UserService } from "../services/UserService";
-import createHttpError from "http-errors";
 
 export class UserController {
     constructor(private readonly userService: UserService) {}
@@ -14,12 +13,6 @@ export class UserController {
     ) => {
         try {
             const userId = req.user?.id as string;
-
-            const user = await this.userService.getUserById(userId);
-
-            if (!user) {
-                throw createHttpError(404, "User not found");
-            }
 
             const updatedUser = await this.userService.updateUserById(
                 userId,
@@ -39,13 +32,6 @@ export class UserController {
     ) => {
         try {
             const userId = req.user?.id as string;
-
-            const user = await this.userService.getUserById(userId);
-
-            if (!user) {
-                throw createHttpError(404, "User not found");
-            }
-
             await this.userService.findByIdAndDelete(userId);
 
             res.end();
