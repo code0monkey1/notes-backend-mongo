@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 const noteParser = async (
     req: CustomRequest,
-    res: Response,
+    _res: Response,
     next: NextFunction,
 ) => {
     try {
@@ -23,6 +23,7 @@ const noteParser = async (
         }
 
         req.note = note;
+
         next();
     } catch (err) {
         next(err);

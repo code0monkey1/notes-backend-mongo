@@ -26,6 +26,21 @@ router.get(
     },
 );
 
+router.get(
+    "/:id",
+    tokenParser,
+    noteParser,
+    (req: CustomRequest, res: Response, next: NextFunction) => {
+        try {
+            const note = req.note;
+
+            res.json(note);
+        } catch (e) {
+            next(e);
+        }
+    },
+);
+
 router.post(
     "/",
     tokenParser,

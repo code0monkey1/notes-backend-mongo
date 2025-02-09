@@ -5,7 +5,7 @@ import helper, { assertErrorMessageExists } from "../auth/helper";
 import { TokenService } from "../../src/routes/TokenService";
 import Note from "../../src/models/note.model";
 
-describe("READ /notes", () => {
+describe("GET /notes", () => {
     beforeAll(async () => {
         await db.connect();
     });
