@@ -9,6 +9,11 @@ export interface CustomRequest extends Request {
     user?: {
         id: string;
     };
+    note?: {
+        content: string;
+        user: mongoose.Types.ObjectId;
+        important: boolean;
+    };
 }
 
 const tokenParser = async (

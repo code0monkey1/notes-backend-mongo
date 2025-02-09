@@ -8,6 +8,7 @@ import Note, { NoteType } from "../models/note.model";
 import createHttpError from "http-errors";
 import User from "../models/user.model";
 import mongoose from "mongoose";
+import noteParser from "../middlewares/noteParser";
 
 const router = Router();
 
@@ -58,10 +59,46 @@ router.post(
 router.patch(
     "/:id",
     tokenParser,
+    noteParser,
     async (req: CustomRequest, res: Response, next: NextFunction) => {
         try {
-            const body = req.body as Partial<NoteType>;
+            const modifiedNote = req.body as Partial<NoteType>;
 
+            if (!(req.note && req.note.user)) {
+                throw createHttpError(
+                    400,
+                    "note object not attached to custom request object",
+                );
+            }
+
+            if (req.note.user.toString() != req.user?.id) {
+                throw createHttpError(401, "unauthorized user");
+            }
+
+            const updatedNote = await Note.findByIdAndUpdate(
+                req.params.id,
+                modifiedNote,
+                {
+                    new: true,
+                },
+            );
+
+            if (!updatedNote) {
+                return res.status(404).json({ message: "Note not found" });
+            }
+
+            res.json(updatedNote);
+        } catch (error) {
+            next(error);
+        }
+    },
+);
+
+router.delete(
+    "/:id",
+    tokenParser,
+    async (req: CustomRequest, res: Response, next: NextFunction) => {
+        try {
             const noteId = req.params.id;
 
             if (!mongoose.Types.ObjectId.isValid(noteId)) {
@@ -74,21 +111,15 @@ router.patch(
                 throw createHttpError(404, "note not found");
             }
 
-            if (note.user.toString() != req.user?.id) {
+            if (note.user.toString() !== req.user?.id) {
                 throw createHttpError(401, "unauthorized user");
             }
 
-            const updatedNote = await Note.findByIdAndUpdate(noteId, body, {
-                new: true,
-            });
+            await Note.findByIdAndDelete(noteId);
 
-            if (!updatedNote) {
-                return res.status(404).json({ message: "Note not found" });
-            }
-
-            res.json(updatedNote);
-        } catch (error) {
-            next(error);
+            res.json();
+        } catch (err) {
+            next(err);
         }
     },
 );
