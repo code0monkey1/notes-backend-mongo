@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { NextFunction, Response, Router } from "express";
+import { NextFunction, Response, Router, Request } from "express";
 import tokenParser, { CustomRequest } from "../middlewares/tokenParser";
 import noteValidator from "../validators/note-validator";
 import { validationResult } from "express-validator";
@@ -11,6 +11,20 @@ import mongoose from "mongoose";
 import noteParser from "../middlewares/noteParser";
 
 const router = Router();
+
+router.get(
+    "/",
+    tokenParser,
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const notes = await Note.find({});
+
+            res.json(notes);
+        } catch (e) {
+            next(e);
+        }
+    },
+);
 
 router.post(
     "/",
