@@ -38,6 +38,28 @@ describe("POST /notes", () => {
             expect(res.body.user).toEqual(user._id.toString());
             expect(res.body.important).toBe(note.important);
         });
+
+        it("should add the new note to the notes list of the user who created it", async () => {
+            const user = await helper.createUser(helper.getUserData());
+            const token = TokenService.generateToken({ id: user._id });
+
+            const res = await request(app)
+                .post("/notes")
+                .set("Authorization", `Bearer ${token}`)
+                .send({
+                    content: "This is a test note",
+                    important: true,
+                })
+                .expect(201);
+
+            const createdNote = res.body;
+
+            const fetchedUser = await helper.getUserById(user._id.toString());
+
+            expect(
+                fetchedUser.notes?.map((id) => id.toString()),
+            ).toContainEqual(createdNote.id);
+        });
     });
 
     describe("unhappy path", () => {

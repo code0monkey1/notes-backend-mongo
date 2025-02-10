@@ -1,3 +1,4 @@
+import { RegisterUserType, UserType } from "../../src/models/types";
 import User from "../../src/models/user.model";
 import bcrypt from "bcrypt";
 
@@ -44,7 +45,13 @@ export const assertErrorMessageExists = async (
     expect(errorMessages).toContainEqual(errorMessage);
 };
 
+export const getUserById = async (id: string) => {
+    const user = await User.findById(id);
+    return user as UserType;
+};
+
 export default {
+    getUserById,
     getUserData,
     getAllUsers,
     createUser,

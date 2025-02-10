@@ -23,6 +23,14 @@ const UserSchema: Schema = new Schema(
             type: String,
             required: true,
         },
+        notes: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Note", // Assuming Note is the name of your Note model
+                default: [],
+                required: false,
+            },
+        ],
     },
     {
         timestamps: true,

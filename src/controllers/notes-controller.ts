@@ -64,6 +64,15 @@ export class NotesController {
 
             const newNote = await this.noteService.createNote(noteBody);
 
+            // save note to user notes array
+            const user = await this.userService.getUserById(req.user.id);
+
+            // Add the new note's ObjectId to the user's notes array
+            await this.userService.addNoteToUser(savedUser._id, newNote._id!);
+
+            // Save the updated user document
+            await user.save();
+
             res.status(201).json(newNote);
         } catch (err) {
             next(err);

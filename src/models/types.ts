@@ -5,6 +5,7 @@ export type UserType = {
     email: string;
     hashedPassword: string;
     username: string;
+    notes?: [Types.ObjectId];
 };
 
 export type RegisterUserType = Omit<UserType, "hashedPassword"> & {
@@ -20,4 +21,5 @@ export type NoteType = {
     content: string;
     user: Types.ObjectId;
     important: boolean;
+    _id?: Types.ObjectId;
 };
