@@ -79,6 +79,12 @@ export class NotesController {
         next: NextFunction,
     ) => {
         try {
+            const result = validationResult(req);
+
+            if (!result.isEmpty()) {
+                return res.status(400).json(validationErrorParser(result));
+            }
+
             const updatedNote = await this.noteService.updateNote(
                 req.params.id,
                 req.body as Partial<NoteType>,

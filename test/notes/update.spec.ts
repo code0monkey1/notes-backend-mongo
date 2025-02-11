@@ -2,7 +2,6 @@ import request from "supertest";
 import app from "../../src/app"; // Adjust the path to your app
 import db from "../../src/utils/db";
 import helper, { assertErrorMessageExists } from "../auth/helper";
-
 import Note from "../../src/models/note.model";
 import { TokenService } from "../../src/services/TokenService";
 
@@ -69,6 +68,28 @@ describe("PATCH /notes", () => {
                 .expect(404);
 
             await assertErrorMessageExists(res, "note not found");
+        });
+        it("should return 400 status code when content is not provided", async () => {
+            const user = await helper.createUser(helper.getUserData());
+            const token = TokenService.generateToken({ id: user._id });
+
+            const note = await helper.createNote(
+                {
+                    content: "This is a test note",
+                },
+                user._id,
+            );
+
+            const res = await request(app)
+                .patch(`/notes/${note._id}`)
+                .set("Authorization", `Bearer ${token}`)
+                .send({
+                    content: "",
+                });
+
+            console.log(res.body);
+
+            await assertErrorMessageExists(res, "content cannot be empty");
         });
 
         it("should return 400 status code when notes id is invalid", async () => {
