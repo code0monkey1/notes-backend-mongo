@@ -64,14 +64,8 @@ export class NotesController {
 
             const newNote = await this.noteService.createNote(noteBody);
 
-            // save note to user notes array
-            const user = await this.userService.getUserById(req.user.id);
-
             // Add the new note's ObjectId to the user's notes array
             await this.userService.addNoteToUser(savedUser._id, newNote._id!);
-
-            // Save the updated user document
-            await user.save();
 
             res.status(201).json(newNote);
         } catch (err) {
@@ -85,22 +79,9 @@ export class NotesController {
         next: NextFunction,
     ) => {
         try {
-            const modifiedNote = req.body as Partial<NoteType>;
-
-            if (!(req.note && req.note.user)) {
-                throw createHttpError(
-                    400,
-                    "note object not attached to custom request object",
-                );
-            }
-
-            if (req.note.user.toString() != req.user?.id) {
-                throw createHttpError(401, "unauthorized user");
-            }
-
             const updatedNote = await this.noteService.updateNote(
                 req.params.id,
-                modifiedNote,
+                req.body as Partial<NoteType>,
             );
 
             res.json(updatedNote);
@@ -115,18 +96,7 @@ export class NotesController {
         next: NextFunction,
     ) => {
         try {
-            if (!(req.note && req.note.user)) {
-                throw createHttpError(
-                    400,
-                    "note object not attached to custom request object",
-                );
-            }
-
-            if (req.note.user.toString() !== req.user?.id) {
-                throw createHttpError(401, "unauthorized user");
-            }
-
-            await this.noteService.deleteNote(req.params.id);
+            await this.noteService.deleteNoteById(req.params.id);
 
             res.json();
         } catch (err) {

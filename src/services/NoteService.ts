@@ -34,7 +34,7 @@ export default class NoteService {
         return note;
     }
 
-    async deleteNote(id: string) {
+    async deleteNoteById(id: string) {
         await Note.findByIdAndDelete(id);
     }
 }
