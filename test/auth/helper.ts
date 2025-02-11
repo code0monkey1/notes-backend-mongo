@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+import Note from "../../src/models/note.model";
 import { RegisterUserType, UserType } from "../../src/models/types";
 import User from "../../src/models/user.model";
 import bcrypt from "bcrypt";
@@ -50,11 +52,21 @@ export const getUserById = async (id: string) => {
     return user as UserType;
 };
 
+export const createNote = async (noteData: any, userId: Types.ObjectId) => {
+    const note = await Note.create({
+        content: noteData.content,
+        important: noteData.important,
+        user: userId,
+    });
+    return note;
+};
+
 export default {
     getUserById,
     getUserData,
     getAllUsers,
     createUser,
+    createNote,
     assertErrorMessageExists,
     getDeletedUser,
 };

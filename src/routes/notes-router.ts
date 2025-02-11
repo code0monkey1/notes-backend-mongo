@@ -7,6 +7,7 @@ import { NotesController } from "../controllers/notes-controller";
 import NoteService from "../services/NoteService";
 import UserService from "../services/UserService";
 import noteAuthMiddleware from "../middlewares/notesAuth";
+import noteUpdateValidator from "../validators/note-update-validator";
 
 const router = Router();
 const noteService = new NoteService();
@@ -24,6 +25,7 @@ router.post("/", noteValidator, notesController.createNote);
 
 router.patch(
     "/:id",
+    noteUpdateValidator,
     noteParser,
     noteAuthMiddleware,
     notesController.updateNoteById,

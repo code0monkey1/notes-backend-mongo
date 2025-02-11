@@ -7,6 +7,7 @@ export default checkSchema({
         trim: true,
     },
     important: {
+        optional: true,
         default: false,
     },
 });
